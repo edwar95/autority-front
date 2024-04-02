@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react'
-import { getTasks, deleteTaskById } from './service/tasksService';
+import { getTasks, deleteTaskById, markAsCompleted } from './service/tasksService';
 import { Task } from '../types/task';
 import {
   Table,
@@ -40,10 +40,32 @@ const page = () => {
     const deleteTask = async () => {
       await deleteTaskById(taskToDelete.id);
       setTasks((prev) => prev.filter((task: Task) => task.id !== taskToDelete.id));
+      toast.success(`Task ${taskToDelete.name} deleted successfully`, {
+        duration: 900,
+        position: 'bottom-right'
+      })
     }
 
     try {
       await deleteTask();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleComplete = async (taskToComplete: Task) => {
+    const markAsComplete = async (task: Task) => {
+      await markAsCompleted(task);
+      const updatedTasks = await getTasks();
+      setTasks(updatedTasks);
+    }
+
+    try {
+      await markAsComplete(taskToComplete);
+      toast.success(`Task ${taskToComplete.name} completed successfully`, {
+        duration: 900,
+        position: 'bottom-right'
+      })
     } catch (error) {
       console.log(error);
     }
@@ -87,14 +109,25 @@ const page = () => {
                   <Button variant="link" className="flex-grow" onClick={() => handleEdit(task)} >Edit</Button>
                   {
                     !task.isComplete &&
-                    <Button variant="default" className="flex-grow bg-amber-400" onClick={() => toast.success('Hello, Next.js with React-Hot-Toast!', {
-                      duration: 700,
-                      position: 'bottom-right'
-                    })}>
-                      Complete
+                    <Button variant="default" className="flex-grow bg-orange-400">
+                      <AlertDialog>
+                        <AlertDialogTrigger>Complete</AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Mark As Complete?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              You will mark the task <span className="font-bold">{task.name}</span> as complete. Are you sure?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction className="bg-orange-400" onClick={() => handleComplete(task)}>Continue</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </Button>
                   }
-                  <Button variant="destructive" className="flex-grow " >
+                  <Button className="flex-grow bg-red-600" >
                     <AlertDialog>
                       <AlertDialogTrigger>Delete</AlertDialogTrigger>
                       <AlertDialogContent>
@@ -107,7 +140,7 @@ const page = () => {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => handleDelete(task)}>Continue</AlertDialogAction>
+                          <AlertDialogAction className="bg-red-600" onClick={() => handleDelete(task)}>Continue</AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
@@ -118,7 +151,7 @@ const page = () => {
           ))}
         </TableBody>
       </Table>
-    </main>
+    </main >
   )
 }
 
