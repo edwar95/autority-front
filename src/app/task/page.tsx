@@ -1,9 +1,10 @@
 import React from 'react'
+import TaskForm from '../../components/Form'
 
-const index = () => {
+const CreatePage = () => {
   return (
-    <div>otra cosita</div>
+    <div><TaskForm /></div>
   )
 }
 
-export default index
+export default CreatePage

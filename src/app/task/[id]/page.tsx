@@ -1,8 +1,9 @@
 import React from 'react'
+import TaskForm from '../../../components/Form'
 
 const EditPage = () => {
   return (
-    <div>Edit</div>
+    <div><TaskForm /></div>
   )
 }
 
