@@ -72,19 +72,16 @@ const page = () => {
   }
 
   useEffect(() => {
-
     const fetchTasks = async () => {
       const tasks = await getTasks();
       setTasks(tasks);
     };
-
 
     fetchTasks();
   }, []);
 
 
   return (
-
     <main>
       <Table>
         <TableCaption>A list of Tasks</TableCaption>

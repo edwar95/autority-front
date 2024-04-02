@@ -15,7 +15,9 @@ import { z } from "zod"
 import { Button } from './ui/button';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "../components/ui/input"
+import { Checkbox } from "../components/ui/checkbox"
 
+import { toast } from 'react-hot-toast';
 
 const formSchema = z.object({
   name: z.string().min(3).max(255),
@@ -42,6 +44,10 @@ const TaskForm = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
+    toast.success(`Task created successfully`, {
+      duration: 900,
+      position: 'bottom-right'
+    })
   }
 
   return (
@@ -83,6 +89,23 @@ const TaskForm = () => {
                 <FormLabel className='text-black-400'>Task Author</FormLabel>
                 <FormControl>
                   <Input placeholder="Add a task author..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="isCompleted"
+            render={({ field }) => (
+              <FormItem className='content-start'>
+                <FormLabel className='text-black-400 pr-5'>Completed?</FormLabel>
+                <FormControl >
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
