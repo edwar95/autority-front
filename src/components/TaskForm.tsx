@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Form,
   FormControl,
@@ -14,45 +14,49 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from './ui/button';
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Input } from "../components/ui/input"
-import { Checkbox } from "../components/ui/checkbox"
+import { Input } from "./ui/input"
+import { Checkbox } from "./ui/checkbox"
+import { Task } from '../types/task'
+import { useRouter } from 'next/navigation'
 
-import { toast } from 'react-hot-toast';
-
-const formSchema = z.object({
+export const formSchema = z.object({
   name: z.string().min(3).max(255),
   description: z.string().min(3).max(1000),
-  isCompleted: z.boolean().default(false),
+  isComplete: z.boolean().default(false),
   author: z.string().min(3).max(255),
 });
 
+type TaskFormProps = {
+  handleSubmit: (values: z.infer<typeof formSchema>) => void
+  task?: Task
+  type: "create" | "update"
+}
 
-const TaskForm = () => {
+const TaskForm = ({ handleSubmit, task, type }: TaskFormProps) => {
+
+
+  const router = useRouter();
+  const initialValues = {
+    ...task
+  }
+
+  if (task) {
+    initialValues.name = task.name
+    initialValues.description = task.description
+    initialValues.author = task.author
+    initialValues.isComplete = task.isComplete
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      author: "",
-      isCompleted: false,
+      ...initialValues
     },
   })
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
-    toast.success(`Task created successfully`, {
-      duration: 900,
-      position: 'bottom-right'
-    })
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4 place-items-center pt-20">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="grid grid-cols-1 gap-4 place-items-center">
         <section >
           <FormField
             control={form.control}
@@ -61,7 +65,9 @@ const TaskForm = () => {
               <FormItem className='text-left'>
                 <FormLabel className='text-black-400'>Task Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Add a task name" {...field} />
+                  <Input placeholder="Add a task name"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -74,7 +80,9 @@ const TaskForm = () => {
               <FormItem className='text-left'>
                 <FormLabel className='text-black-400'>Task Description</FormLabel>
                 <FormControl>
-                  <Input placeholder="Add a task description..." {...field} />
+                  <Input placeholder="Add a task description..."
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -88,7 +96,9 @@ const TaskForm = () => {
               <FormItem className='text-left'>
                 <FormLabel className='text-black-400'>Task Author</FormLabel>
                 <FormControl>
-                  <Input placeholder="Add a task author..." {...field} />
+                  <Input placeholder="Add a task author..."
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,7 +107,7 @@ const TaskForm = () => {
 
           <FormField
             control={form.control}
-            name="isCompleted"
+            name="isComplete"
             render={({ field }) => (
               <FormItem className='content-start'>
                 <FormLabel className='text-black-400 pr-5'>Completed?</FormLabel>
@@ -113,9 +123,17 @@ const TaskForm = () => {
           />
         </section>
 
-        <Button type="submit" className='text-center'>Submit</Button>
+        <section className='grid gap-4 grid-cols-2'>
+          <Button variant="secondary" type="button" className='text-center border-double' onClick={
+            () => router.push('/')
+          }>Cancel</Button>
+          <Button type="submit" className='text-center'>{
+            type === 'create' ? 'Create Task' : 'Update Task'
+          }</Button>
+
+        </section>
       </form>
-    </Form>
+    </Form >
   )
 }
 

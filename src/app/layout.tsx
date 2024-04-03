@@ -1,4 +1,5 @@
 
+import Nav from "../components/Nav";
 import "../styles/globals.css";
 import { Toaster } from 'react-hot-toast';
 export const metadata = {
@@ -15,10 +16,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
-        <Toaster />
+        <main>
+          <Nav />
+          {children}
+          <Toaster />
+        </main>
       </body>
 
-    </html>
+    </html >
   )
 }

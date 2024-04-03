@@ -5,3 +5,10 @@ export type Task = {
   author: string;
   isComplete: boolean;
 };
+
+export type NewTask = {
+  name: string;
+  description: string;
+  author: string;
+  isComplete: boolean;
+};
