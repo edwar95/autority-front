@@ -82,7 +82,7 @@ const page = () => {
 
 
   return (
-    <main>
+    <div>
       <Table>
         <TableCaption>A list of Tasks</TableCaption>
         <TableHeader>
@@ -148,7 +148,7 @@ const page = () => {
           ))}
         </TableBody>
       </Table>
-    </main >
+    </div >
   )
 }
 

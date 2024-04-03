@@ -1,4 +1,4 @@
-import type { InitialOptionsTsJest } from 'ts-jest/dist/types'
+import type { InitialOptionsTsJest } from 'ts-jest/dist/types';
 
 const config: InitialOptionsTsJest = {
   preset: 'ts-jest',
@@ -12,6 +12,13 @@ const config: InitialOptionsTsJest = {
       tsconfig: 'tsconfig.test.json',
     },
   },
-}
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  collectCoverage: true,
+  collectCoverageFrom: [
+    'src/**/*.{js,jsx,tsx,ts}',
+    '!src/components/ui/*',
+    '!src/pages/*',
+  ],
+};
 
-export default config
+export default config;
