@@ -10,10 +10,7 @@ import { Separator } from './ui/separator';
 const Nav = () => {
   const router = useRouter();
 
-  const pathname = usePathname()
-
-  // Do something with the currentPath
-  console.log(pathname);
+  const pathname = usePathname();
 
   const handleCreateTask = () => {
     router.push("/task")

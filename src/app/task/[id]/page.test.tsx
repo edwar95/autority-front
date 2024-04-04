@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { act, render, waitFor, screen } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import EditPage from './page'
 import { getTask } from '../../service/tasksService'
 import { Task } from '../../../types/task';
